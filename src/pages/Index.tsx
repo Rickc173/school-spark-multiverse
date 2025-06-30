@@ -1,13 +1,43 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { Navigate } from 'react-router-dom';
+import Login from '@/components/Login';
+import DashboardLayout from '@/components/Layout/DashboardLayout';
+import SystemAdminDashboard from '@/components/Dashboard/SystemAdminDashboard';
+import SchoolAdminDashboard from '@/components/Dashboard/SchoolAdminDashboard';
+import TeacherDashboard from '@/components/Dashboard/TeacherDashboard';
+import StudentDashboard from '@/components/Dashboard/StudentDashboard';
+import ParentDashboard from '@/components/Dashboard/ParentDashboard';
 
 const Index = () => {
+  const { user, isAuthenticated } = useAuth();
+
+  if (!isAuthenticated) {
+    return <Login />;
+  }
+
+  const getDashboardComponent = () => {
+    switch (user?.role) {
+      case 'system_admin':
+        return <SystemAdminDashboard />;
+      case 'school_admin':
+        return <SchoolAdminDashboard />;
+      case 'teacher':
+        return <TeacherDashboard />;
+      case 'student':
+        return <StudentDashboard />;
+      case 'parent':
+        return <ParentDashboard />;
+      default:
+        return <Navigate to="/login" replace />;
+    }
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <DashboardLayout>
+      {getDashboardComponent()}
+    </DashboardLayout>
   );
 };
 
