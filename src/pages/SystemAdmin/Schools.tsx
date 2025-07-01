@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import DashboardLayout from '@/components/Layout/DashboardLayout';
@@ -10,11 +9,14 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Plus, Search, Settings, Users } from 'lucide-react';
+import SubscriptionManagement from '@/components/SystemAdmin/SubscriptionManagement';
 
 const SystemAdminSchools = () => {
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddDialog, setShowAddDialog] = useState(false);
+  const [selectedSchool, setSelectedSchool] = useState(null);
+  const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
   const [newSchool, setNewSchool] = useState({
     name: '',
     address: '',
@@ -35,6 +37,8 @@ const SystemAdminSchools = () => {
       students: 847,
       teachers: 52,
       status: 'Active',
+      subscription: 'premium',
+      expiryDate: '2024-12-31',
       created: '2023-01-15'
     },
     {
@@ -47,6 +51,8 @@ const SystemAdminSchools = () => {
       students: 432,
       teachers: 28,
       status: 'Active',
+      subscription: 'demo',
+      expiryDate: '2024-02-15',
       created: '2023-03-22'
     },
     {
@@ -59,6 +65,8 @@ const SystemAdminSchools = () => {
       students: 623,
       teachers: 41,
       status: 'Pending Setup',
+      subscription: 'locked',
+      expiryDate: '2023-12-01',
       created: '2023-11-10'
     }
   ];
@@ -72,6 +80,20 @@ const SystemAdminSchools = () => {
     console.log('Adding new school:', newSchool);
     setShowAddDialog(false);
     setNewSchool({ name: '', address: '', phone: '', email: '', principal: '' });
+  };
+
+  const handleSchoolSettings = (school) => {
+    setSelectedSchool(school);
+    setShowSubscriptionDialog(true);
+  };
+
+  const getSubscriptionBadgeColor = (subscription) => {
+    switch (subscription) {
+      case 'premium': return 'bg-green-100 text-green-800';
+      case 'demo': return 'bg-yellow-100 text-yellow-800';
+      case 'locked': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
   };
 
   return (
@@ -179,7 +201,14 @@ const SystemAdminSchools = () => {
                       <Badge variant={school.status === 'Active' ? 'default' : 'secondary'}>
                         {school.status}
                       </Badge>
-                      <Button variant="outline" size="sm">
+                      <Badge className={getSubscriptionBadgeColor(school.subscription)}>
+                        {school.subscription.toUpperCase()}
+                      </Badge>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => handleSchoolSettings(school)}
+                      >
                         <Settings className="h-4 w-4" />
                       </Button>
                     </div>
@@ -212,13 +241,27 @@ const SystemAdminSchools = () => {
                     </div>
                   </div>
                   <div className="mt-4 pt-4 border-t">
-                    <p className="text-sm text-gray-500">Created: {new Date(school.created).toLocaleDateString()}</p>
+                    <div className="flex justify-between items-center">
+                      <p className="text-sm text-gray-500">Created: {new Date(school.created).toLocaleDateString()}</p>
+                      <p className="text-sm text-gray-500">Expires: {new Date(school.expiryDate).toLocaleDateString()}</p>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
             ))}
           </div>
         </div>
+
+        {selectedSchool && (
+          <SubscriptionManagement
+            school={selectedSchool}
+            isOpen={showSubscriptionDialog}
+            onClose={() => {
+              setShowSubscriptionDialog(false);
+              setSelectedSchool(null);
+            }}
+          />
+        )}
       </DashboardLayout>
     </ProtectedRoute>
   );

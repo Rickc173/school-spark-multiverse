@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import DashboardLayout from '@/components/Layout/DashboardLayout';
@@ -9,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import { MultiSelect } from '@/components/ui/multi-select';
 import { Plus, Search, User, Calendar, FileText } from 'lucide-react';
 
 const SchoolAdminTeachers = () => {
@@ -19,10 +19,22 @@ const SchoolAdminTeachers = () => {
     name: '',
     email: '',
     phone: '',
-    subjects: '',
-    classes: '',
+    subjects: [] as string[],
+    classes: [] as string[],
     qualification: ''
   });
+
+  // Available subjects and classes
+  const availableSubjects = [
+    'Mathematics', 'Physics', 'Chemistry', 'Biology', 'English Literature', 
+    'Creative Writing', 'History', 'Geography', 'Computer Science', 'Art', 
+    'Music', 'Physical Education', 'Economics', 'Psychology'
+  ];
+
+  const availableClasses = [
+    'Grade 8A', 'Grade 8B', 'Grade 9A', 'Grade 9B', 'Grade 10A', 
+    'Grade 10B', 'Grade 11A', 'Grade 11B', 'Grade 11C', 'Grade 12A'
+  ];
 
   // Mock data - replace with actual API calls
   const teachers = [
@@ -85,7 +97,7 @@ const SchoolAdminTeachers = () => {
   const handleAddTeacher = () => {
     console.log('Adding new teacher:', newTeacher);
     setShowAddDialog(false);
-    setNewTeacher({ name: '', email: '', phone: '', subjects: '', classes: '', qualification: '' });
+    setNewTeacher({ name: '', email: '', phone: '', subjects: [], classes: [], qualification: '' });
   };
 
   return (
@@ -155,20 +167,20 @@ const SchoolAdminTeachers = () => {
                   </div>
                   <div>
                     <Label htmlFor="subjects">Subjects</Label>
-                    <Input
-                      id="subjects"
-                      value={newTeacher.subjects}
-                      onChange={(e) => setNewTeacher({...newTeacher, subjects: e.target.value})}
-                      placeholder="Enter subjects (comma separated)"
+                    <MultiSelect
+                      options={availableSubjects}
+                      selected={newTeacher.subjects}
+                      onSelectionChange={(subjects) => setNewTeacher({...newTeacher, subjects})}
+                      placeholder="Select subjects to teach"
                     />
                   </div>
                   <div>
                     <Label htmlFor="classes">Classes</Label>
-                    <Input
-                      id="classes"
-                      value={newTeacher.classes}
-                      onChange={(e) => setNewTeacher({...newTeacher, classes: e.target.value})}
-                      placeholder="Enter classes (comma separated)"
+                    <MultiSelect
+                      options={availableClasses}
+                      selected={newTeacher.classes}
+                      onSelectionChange={(classes) => setNewTeacher({...newTeacher, classes})}
+                      placeholder="Select classes to teach"
                     />
                   </div>
                   <Button onClick={handleAddTeacher} className="w-full">

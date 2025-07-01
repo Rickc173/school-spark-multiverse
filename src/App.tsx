@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
 // System Admin Pages
+import SystemAdminDashboard from "./pages/SystemAdmin/Dashboard";
 import SystemAdminSchools from "./pages/SystemAdmin/Schools";
 import SystemAdminUsers from "./pages/SystemAdmin/Users";
 import SystemAdminSettings from "./pages/SystemAdmin/Settings";
@@ -34,11 +35,13 @@ const App = () => (
             <Route path="/" element={<Index />} />
             
             {/* System Admin Routes */}
+            <Route path="/system-admin" element={<SystemAdminDashboard />} />
             <Route path="/system-admin/schools" element={<SystemAdminSchools />} />
             <Route path="/system-admin/users" element={<SystemAdminUsers />} />
             <Route path="/system-admin/settings" element={<SystemAdminSettings />} />
             
             {/* School Admin Routes */}
+            <Route path="/school-admin" element={<SchoolAdminStudents />} />
             <Route path="/school-admin/students" element={<SchoolAdminStudents />} />
             <Route path="/school-admin/teachers" element={<SchoolAdminTeachers />} />
             <Route path="/school-admin/classes" element={<SchoolAdminClasses />} />

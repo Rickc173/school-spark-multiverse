@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import DashboardLayout from '@/components/Layout/DashboardLayout';
@@ -7,10 +6,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Plus, Search, User, Users, Calendar } from 'lucide-react';
+import MultiStepStudentForm from '@/components/SchoolAdmin/MultiStepStudentForm';
 
 const SchoolAdminStudents = () => {
   const { user } = useAuth();
@@ -18,15 +16,6 @@ const SchoolAdminStudents = () => {
   const [classFilter, setClassFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [showAddDialog, setShowAddDialog] = useState(false);
-  const [newStudent, setNewStudent] = useState({
-    name: '',
-    email: '',
-    class: '',
-    rollNumber: '',
-    parentName: '',
-    parentPhone: '',
-    parentEmail: ''
-  });
 
   // Mock data - replace with actual API calls
   const students = [
@@ -97,10 +86,9 @@ const SchoolAdminStudents = () => {
     return matchesSearch && matchesClass && matchesStatus;
   });
 
-  const handleAddStudent = () => {
-    console.log('Adding new student:', newStudent);
-    setShowAddDialog(false);
-    setNewStudent({ name: '', email: '', class: '', rollNumber: '', parentName: '', parentPhone: '', parentEmail: '' });
+  const handleAddStudent = (studentData: any) => {
+    console.log('Adding new student:', studentData);
+    // Here you would make an API call to add the student
   };
 
   const getAttendanceBadgeColor = (attendance: number) => {
@@ -118,104 +106,10 @@ const SchoolAdminStudents = () => {
               <h1 className="text-3xl font-bold text-gray-900">Students Management</h1>
               <p className="text-gray-600 mt-2">Manage all students in your school</p>
             </div>
-            <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
-              <DialogTrigger asChild>
-                <Button>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Student
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                  <DialogTitle>Add New Student</DialogTitle>
-                  <DialogDescription>
-                    Enter the student details and parent information
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-4">
-                    <h3 className="font-semibold">Student Information</h3>
-                    <div>
-                      <Label htmlFor="name">Full Name</Label>
-                      <Input
-                        id="name"
-                        value={newStudent.name}
-                        onChange={(e) => setNewStudent({...newStudent, name: e.target.value})}
-                        placeholder="Enter student name"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="email">Email</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={newStudent.email}
-                        onChange={(e) => setNewStudent({...newStudent, email: e.target.value})}
-                        placeholder="Enter email address"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="class">Class</Label>
-                      <Select value={newStudent.class} onValueChange={(value) => setNewStudent({...newStudent, class: value})}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select class" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {classes.map((cls) => (
-                            <SelectItem key={cls} value={cls}>
-                              {cls}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="rollNumber">Roll Number</Label>
-                      <Input
-                        id="rollNumber"
-                        value={newStudent.rollNumber}
-                        onChange={(e) => setNewStudent({...newStudent, rollNumber: e.target.value})}
-                        placeholder="Enter roll number"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-4">
-                    <h3 className="font-semibold">Parent Information</h3>
-                    <div>
-                      <Label htmlFor="parentName">Parent Name</Label>
-                      <Input
-                        id="parentName"
-                        value={newStudent.parentName}
-                        onChange={(e) => setNewStudent({...newStudent, parentName: e.target.value})}
-                        placeholder="Enter parent name"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="parentPhone">Parent Phone</Label>
-                      <Input
-                        id="parentPhone"
-                        value={newStudent.parentPhone}
-                        onChange={(e) => setNewStudent({...newStudent, parentPhone: e.target.value})}
-                        placeholder="Enter parent phone"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="parentEmail">Parent Email</Label>
-                      <Input
-                        id="parentEmail"
-                        type="email"
-                        value={newStudent.parentEmail}
-                        onChange={(e) => setNewStudent({...newStudent, parentEmail: e.target.value})}
-                        placeholder="Enter parent email"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <Button onClick={handleAddStudent} className="w-full mt-4">
-                  Add Student
-                </Button>
-              </DialogContent>
-            </Dialog>
+            <Button onClick={() => setShowAddDialog(true)}>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Student
+            </Button>
           </div>
 
           <div className="flex items-center space-x-4">
@@ -301,6 +195,12 @@ const SchoolAdminStudents = () => {
               </Card>
             ))}
           </div>
+
+          <MultiStepStudentForm
+            isOpen={showAddDialog}
+            onClose={() => setShowAddDialog(false)}
+            onSubmit={handleAddStudent}
+          />
         </div>
       </DashboardLayout>
     </ProtectedRoute>
