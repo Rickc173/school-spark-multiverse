@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import DashboardLayout from '@/components/Layout/DashboardLayout';
@@ -13,11 +12,14 @@ import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Search, FileText, Calendar, Users } from 'lucide-react';
 import FeeTemplatesManager from '@/components/SchoolAdmin/FeeTemplatesManager';
+import StudentPaymentDetailsDialog from '@/components/SchoolAdmin/StudentPaymentDetailsDialog';
 
 const SchoolAdminFees = () => {
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [showDetailsDialog, setShowDetailsDialog] = useState(false);
 
   // Mock data - replace with actual API calls
   const feeStructures = [
@@ -123,6 +125,11 @@ const SchoolAdminFees = () => {
     const matchesStatus = statusFilter === 'all' || student.status.toLowerCase() === statusFilter;
     return matchesSearch && matchesStatus;
   });
+
+  const handleViewDetails = (student: any) => {
+    setSelectedStudent(student);
+    setShowDetailsDialog(true);
+  };
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -249,7 +256,11 @@ const SchoolAdminFees = () => {
                           <Badge className={getStatusColor(student.status)}>
                             {student.status}
                           </Badge>
-                          <Button variant="outline" size="sm">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleViewDetails(student)}
+                          >
                             View Details
                           </Button>
                         </div>
@@ -325,6 +336,14 @@ const SchoolAdminFees = () => {
             </TabsContent>
           </Tabs>
         </div>
+
+        {selectedStudent && (
+          <StudentPaymentDetailsDialog
+            student={selectedStudent}
+            isOpen={showDetailsDialog}
+            onClose={() => setShowDetailsDialog(false)}
+          />
+        )}
       </DashboardLayout>
     </ProtectedRoute>
   );

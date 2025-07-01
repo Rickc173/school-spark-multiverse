@@ -22,6 +22,12 @@ import SchoolAdminFees from "./pages/SchoolAdmin/Fees";
 import SchoolAdminAnnouncements from "./pages/SchoolAdmin/Announcements";
 import SchoolAdminSettings from "./pages/SchoolAdmin/Settings";
 
+// Teacher Pages
+import TeacherClasses from "./pages/Teacher/Classes";
+import TeacherAssignments from "./pages/Teacher/Assignments";
+import TeacherAttendance from "./pages/Teacher/Attendance";
+import TeacherStudents from "./pages/Teacher/Students";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -48,6 +54,12 @@ const App = () => (
             <Route path="/school-admin/fees" element={<SchoolAdminFees />} />
             <Route path="/school-admin/announcements" element={<SchoolAdminAnnouncements />} />
             <Route path="/school-admin/settings" element={<SchoolAdminSettings />} />
+            
+            {/* Teacher Routes */}
+            <Route path="/teacher/classes" element={<TeacherClasses />} />
+            <Route path="/teacher/assignments" element={<TeacherAssignments />} />
+            <Route path="/teacher/attendance" element={<TeacherAttendance />} />
+            <Route path="/teacher/students" element={<TeacherStudents />} />
             
             <Route path="*" element={<NotFound />} />
           </Routes>
