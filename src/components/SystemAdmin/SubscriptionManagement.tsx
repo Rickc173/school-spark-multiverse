@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -23,6 +22,10 @@ interface SubscriptionManagementProps {
 
 const SubscriptionManagement = ({ school, isOpen, onClose }: SubscriptionManagementProps) => {
   const [newSubscription, setNewSubscription] = useState(school.subscription);
+
+  const handleSubscriptionChange = (value: string) => {
+    setNewSubscription(value as 'demo' | 'premium' | 'locked');
+  };
 
   const getSubscriptionColor = (subscription: string) => {
     switch (subscription) {
@@ -81,7 +84,7 @@ const SubscriptionManagement = ({ school, isOpen, onClose }: SubscriptionManagem
 
           <div className="space-y-2">
             <Label htmlFor="subscription">Update Subscription</Label>
-            <Select value={newSubscription} onValueChange={setNewSubscription}>
+            <Select value={newSubscription} onValueChange={handleSubscriptionChange}>
               <SelectTrigger>
                 <SelectValue placeholder="Select subscription type" />
               </SelectTrigger>
