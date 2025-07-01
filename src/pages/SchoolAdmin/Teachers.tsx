@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import DashboardLayout from '@/components/Layout/DashboardLayout';
@@ -10,11 +11,18 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Label } from '@/components/ui/label';
 import { MultiSelect } from '@/components/ui/multi-select';
 import { Plus, Search, User, Calendar, FileText } from 'lucide-react';
+import TeacherScheduleDialog from '@/components/SchoolAdmin/TeacherScheduleDialog';
+import TeacherClassesDialog from '@/components/SchoolAdmin/TeacherClassesDialog';
+import EditTeacherDialog from '@/components/SchoolAdmin/EditTeacherDialog';
 
 const SchoolAdminTeachers = () => {
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddDialog, setShowAddDialog] = useState(false);
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
+  const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
+  const [classesDialogOpen, setClassesDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [newTeacher, setNewTeacher] = useState({
     name: '',
     email: '',
@@ -98,6 +106,21 @@ const SchoolAdminTeachers = () => {
     console.log('Adding new teacher:', newTeacher);
     setShowAddDialog(false);
     setNewTeacher({ name: '', email: '', phone: '', subjects: [], classes: [], qualification: '' });
+  };
+
+  const handleViewSchedule = (teacher: any) => {
+    setSelectedTeacher(teacher);
+    setScheduleDialogOpen(true);
+  };
+
+  const handleViewClasses = (teacher: any) => {
+    setSelectedTeacher(teacher);
+    setClassesDialogOpen(true);
+  };
+
+  const handleEditTeacher = (teacher: any) => {
+    setSelectedTeacher(teacher);
+    setEditDialogOpen(true);
   };
 
   return (
@@ -223,7 +246,7 @@ const SchoolAdminTeachers = () => {
                       <Badge variant={teacher.status === 'Active' ? 'default' : 'secondary'}>
                         {teacher.status}
                       </Badge>
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" onClick={() => handleEditTeacher(teacher)}>
                         Edit
                       </Button>
                     </div>
@@ -269,10 +292,10 @@ const SchoolAdminTeachers = () => {
                       </div>
                     </div>
                     <div className="flex space-x-2">
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" onClick={() => handleViewSchedule(teacher)}>
                         View Schedule
                       </Button>
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" onClick={() => handleViewClasses(teacher)}>
                         View Classes
                       </Button>
                     </div>
@@ -282,6 +305,23 @@ const SchoolAdminTeachers = () => {
             ))}
           </div>
         </div>
+
+        {/* Dialogs */}
+        <TeacherScheduleDialog
+          teacher={selectedTeacher}
+          isOpen={scheduleDialogOpen}
+          onClose={() => setScheduleDialogOpen(false)}
+        />
+        <TeacherClassesDialog
+          teacher={selectedTeacher}
+          isOpen={classesDialogOpen}
+          onClose={() => setClassesDialogOpen(false)}
+        />
+        <EditTeacherDialog
+          teacher={selectedTeacher}
+          isOpen={editDialogOpen}
+          onClose={() => setEditDialogOpen(false)}
+        />
       </DashboardLayout>
     </ProtectedRoute>
   );

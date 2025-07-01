@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import DashboardLayout from '@/components/Layout/DashboardLayout';
@@ -11,10 +10,16 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings as SettingsIcon, School, Bell, Users, FileText } from 'lucide-react';
+import { Settings as SettingsIcon, School, Bell, Users, FileText, BookOpen } from 'lucide-react';
+import GradeSystemSettings from '@/components/SchoolAdmin/GradeSystemSettings';
+import CoursesManagement from '@/components/SchoolAdmin/CoursesManagement';
+import SchoolYearTermsSettings from '@/components/SchoolAdmin/SchoolYearTermsSettings';
+import TimetableCreator from '@/components/SchoolAdmin/TimetableCreator';
+import FeeTemplatesManager from '@/components/SchoolAdmin/FeeTemplatesManager';
 
 const SchoolAdminSettings = () => {
   const { user } = useAuth();
+  
   const [schoolSettings, setSchoolSettings] = useState({
     schoolName: 'Greenwood High School',
     address: '123 Education St, City, State 12345',
@@ -24,15 +29,6 @@ const SchoolAdminSettings = () => {
     principal: 'Dr. Sarah Johnson',
     established: '1995',
     description: 'A premier educational institution dedicated to excellence in learning and character development.'
-  });
-
-  const [academicSettings, setAcademicSettings] = useState({
-    academicYear: '2023-2024',
-    semesterSystem: true,
-    gradingScale: 'A-F',
-    passingGrade: 'D',
-    maxAbsences: 15,
-    classSchedule: '8:00 AM - 3:00 PM'
   });
 
   const [notificationSettings, setNotificationSettings] = useState({
@@ -57,10 +53,6 @@ const SchoolAdminSettings = () => {
     console.log('Saving school settings:', schoolSettings);
   };
 
-  const handleSaveAcademicSettings = () => {
-    console.log('Saving academic settings:', academicSettings);
-  };
-
   const handleSaveNotificationSettings = () => {
     console.log('Saving notification settings:', notificationSettings);
   };
@@ -79,11 +71,12 @@ const SchoolAdminSettings = () => {
           </div>
 
           <Tabs defaultValue="school" className="space-y-4">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="school">School Info</TabsTrigger>
               <TabsTrigger value="academic">Academic</TabsTrigger>
               <TabsTrigger value="notifications">Notifications</TabsTrigger>
               <TabsTrigger value="system">System</TabsTrigger>
+              <TabsTrigger value="fees">Fee Templates</TabsTrigger>
             </TabsList>
 
             <TabsContent value="school" className="space-y-4">
@@ -185,88 +178,12 @@ const SchoolAdminSettings = () => {
             </TabsContent>
 
             <TabsContent value="academic" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <FileText className="h-5 w-5" />
-                    <span>Academic Settings</span>
-                  </CardTitle>
-                  <CardDescription>
-                    Configure academic year, grading, and class schedules
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="academicYear">Academic Year</Label>
-                      <Input
-                        id="academicYear"
-                        value={academicSettings.academicYear}
-                        onChange={(e) => setAcademicSettings({...academicSettings, academicYear: e.target.value})}
-                        placeholder="Enter academic year"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="classSchedule">Class Schedule</Label>
-                      <Input
-                        id="classSchedule"
-                        value={academicSettings.classSchedule}
-                        onChange={(e) => setAcademicSettings({...academicSettings, classSchedule: e.target.value})}
-                        placeholder="Enter class schedule"
-                      />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="gradingScale">Grading Scale</Label>
-                      <select
-                        id="gradingScale"
-                        value={academicSettings.gradingScale}
-                        onChange={(e) => setAcademicSettings({...academicSettings, gradingScale: e.target.value})}
-                        className="w-full p-2 border rounded-md"
-                      >
-                        <option value="A-F">A-F Scale</option>
-                        <option value="1-10">1-10 Scale</option>
-                        <option value="percentage">Percentage</option>
-                      </select>
-                    </div>
-                    <div>
-                      <Label htmlFor="passingGrade">Passing Grade</Label>
-                      <Input
-                        id="passingGrade"
-                        value={academicSettings.passingGrade}
-                        onChange={(e) => setAcademicSettings({...academicSettings, passingGrade: e.target.value})}
-                        placeholder="Enter passing grade"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <Label htmlFor="maxAbsences">Maximum Allowed Absences</Label>
-                    <Input
-                      id="maxAbsences"
-                      type="number"
-                      value={academicSettings.maxAbsences}
-                      onChange={(e) => setAcademicSettings({...academicSettings, maxAbsences: parseInt(e.target.value)})}
-                      placeholder="Enter maximum absences"
-                    />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label>Semester System</Label>
-                      <p className="text-sm text-gray-500">
-                        Use semester-based academic calendar
-                      </p>
-                    </div>
-                    <Switch
-                      checked={academicSettings.semesterSystem}
-                      onCheckedChange={(checked) => setAcademicSettings({...academicSettings, semesterSystem: checked})}
-                    />
-                  </div>
-                  <Button onClick={handleSaveAcademicSettings}>
-                    Save Academic Settings
-                  </Button>
-                </CardContent>
-              </Card>
+              <div className="space-y-6">
+                <GradeSystemSettings />
+                <CoursesManagement />
+                <SchoolYearTermsSettings />
+                <TimetableCreator />
+              </div>
             </TabsContent>
 
             <TabsContent value="notifications" className="space-y-4">
@@ -454,6 +371,10 @@ const SchoolAdminSettings = () => {
                   </Button>
                 </CardContent>
               </Card>
+            </TabsContent>
+
+            <TabsContent value="fees" className="space-y-4">
+              <FeeTemplatesManager />
             </TabsContent>
           </Tabs>
         </div>
