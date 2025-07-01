@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Plus, Search, User, Users, Calendar } from 'lucide-react';
 import MultiStepStudentForm from '@/components/SchoolAdmin/MultiStepStudentForm';
+import StudentDetailsDialog from '@/components/SchoolAdmin/StudentDetailsDialog';
 
 const SchoolAdminStudents = () => {
   const { user } = useAuth();
@@ -16,6 +17,8 @@ const SchoolAdminStudents = () => {
   const [classFilter, setClassFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [showAddDialog, setShowAddDialog] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [showDetailsDialog, setShowDetailsDialog] = useState(false);
 
   // Mock data - replace with actual API calls
   const students = [
@@ -97,6 +100,11 @@ const SchoolAdminStudents = () => {
     return 'bg-red-100 text-red-800';
   };
 
+  const handleViewDetails = (student: any) => {
+    setSelectedStudent(student);
+    setShowDetailsDialog(true);
+  };
+
   return (
     <ProtectedRoute allowedRoles={['school_admin']}>
       <DashboardLayout>
@@ -171,7 +179,7 @@ const SchoolAdminStudents = () => {
                       <Badge variant={student.status === 'Active' ? 'default' : 'secondary'}>
                         {student.status}
                       </Badge>
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" onClick={() => handleViewDetails(student)}>
                         View Details
                       </Button>
                     </div>
@@ -200,6 +208,12 @@ const SchoolAdminStudents = () => {
             isOpen={showAddDialog}
             onClose={() => setShowAddDialog(false)}
             onSubmit={handleAddStudent}
+          />
+
+          <StudentDetailsDialog
+            student={selectedStudent}
+            isOpen={showDetailsDialog}
+            onClose={() => setShowDetailsDialog(false)}
           />
         </div>
       </DashboardLayout>

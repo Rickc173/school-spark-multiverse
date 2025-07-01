@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import DashboardLayout from '@/components/Layout/DashboardLayout';
@@ -10,13 +9,18 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Search, Users, User, Calendar } from 'lucide-react';
+import { Plus, Search, Users, User, Calendar, Settings } from 'lucide-react';
+import GradeSystemSettings from '@/components/SchoolAdmin/GradeSystemSettings';
 
 const SchoolAdminClasses = () => {
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [gradeFilter, setGradeFilter] = useState('all');
   const [showAddDialog, setShowAddDialog] = useState(false);
+  const [showSettingsDialog, setShowSettingsDialog] = useState(false);
+  const [availableGrades, setAvailableGrades] = useState([
+    'Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12'
+  ]);
   const [newClass, setNewClass] = useState({
     name: '',
     grade: '',
@@ -31,7 +35,7 @@ const SchoolAdminClasses = () => {
     {
       id: 1,
       name: 'Grade 10A',
-      grade: '10',
+      grade: 'Grade 10',
       section: 'A',
       teacher: 'Dr. Sarah Johnson',
       teacherId: 1,
@@ -44,7 +48,7 @@ const SchoolAdminClasses = () => {
     {
       id: 2,
       name: 'Grade 10B',
-      grade: '10',
+      grade: 'Grade 10',
       section: 'B',
       teacher: 'Mr. Michael Brown',
       teacherId: 2,
@@ -57,7 +61,7 @@ const SchoolAdminClasses = () => {
     {
       id: 3,
       name: 'Grade 9A',
-      grade: '9',
+      grade: 'Grade 9',
       section: 'A',
       teacher: 'Ms. Emily Davis',
       teacherId: 3,
@@ -70,7 +74,7 @@ const SchoolAdminClasses = () => {
     {
       id: 4,
       name: 'Grade 11A',
-      grade: '11',
+      grade: 'Grade 11',
       section: 'A',
       teacher: 'Mr. John Wilson',
       teacherId: 4,
@@ -89,8 +93,6 @@ const SchoolAdminClasses = () => {
     { id: 4, name: 'Mr. John Wilson' }
   ];
 
-  const grades = ['8', '9', '10', '11', '12'];
-
   const filteredClasses = classes.filter(cls => {
     const matchesSearch = cls.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          cls.teacher.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -103,6 +105,10 @@ const SchoolAdminClasses = () => {
     console.log('Adding new class:', newClass);
     setShowAddDialog(false);
     setNewClass({ name: '', grade: '', section: '', teacher: '', capacity: '', room: '' });
+  };
+
+  const handleGradesUpdate = (grades: string[]) => {
+    setAvailableGrades(grades);
   };
 
   const getCapacityColor = (current: number, capacity: number) => {
@@ -121,89 +127,95 @@ const SchoolAdminClasses = () => {
               <h1 className="text-3xl font-bold text-gray-900">Classes Management</h1>
               <p className="text-gray-600 mt-2">Manage all classes and their assignments</p>
             </div>
-            <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
-              <DialogTrigger asChild>
-                <Button>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Class
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Add New Class</DialogTitle>
-                  <DialogDescription>
-                    Create a new class with teacher assignment
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
+            <div className="flex space-x-2">
+              <Button variant="outline" onClick={() => setShowSettingsDialog(true)}>
+                <Settings className="h-4 w-4 mr-2" />
+                Grade Settings
+              </Button>
+              <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+                <DialogTrigger asChild>
+                  <Button>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Class
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Add New Class</DialogTitle>
+                    <DialogDescription>
+                      Create a new class with teacher assignment
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="grade">Grade/Level</Label>
+                        <Select value={newClass.grade} onValueChange={(value) => setNewClass({...newClass, grade: value})}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select grade" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {availableGrades.map((grade) => (
+                              <SelectItem key={grade} value={grade}>
+                                {grade}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label htmlFor="section">Section</Label>
+                        <Input
+                          id="section"
+                          value={newClass.section}
+                          onChange={(e) => setNewClass({...newClass, section: e.target.value})}
+                          placeholder="Enter section (A, B, C...)"
+                        />
+                      </div>
+                    </div>
                     <div>
-                      <Label htmlFor="grade">Grade</Label>
-                      <Select value={newClass.grade} onValueChange={(value) => setNewClass({...newClass, grade: value})}>
+                      <Label htmlFor="teacher">Class Teacher</Label>
+                      <Select value={newClass.teacher} onValueChange={(value) => setNewClass({...newClass, teacher: value})}>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select grade" />
+                          <SelectValue placeholder="Select teacher" />
                         </SelectTrigger>
                         <SelectContent>
-                          {grades.map((grade) => (
-                            <SelectItem key={grade} value={grade}>
-                              Grade {grade}
+                          {teachers.map((teacher) => (
+                            <SelectItem key={teacher.id} value={teacher.name}>
+                              {teacher.name}
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                     </div>
-                    <div>
-                      <Label htmlFor="section">Section</Label>
-                      <Input
-                        id="section"
-                        value={newClass.section}
-                        onChange={(e) => setNewClass({...newClass, section: e.target.value})}
-                        placeholder="Enter section (A, B, C...)"
-                      />
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="capacity">Capacity</Label>
+                        <Input
+                          id="capacity"
+                          type="number"
+                          value={newClass.capacity}
+                          onChange={(e) => setNewClass({...newClass, capacity: e.target.value})}
+                          placeholder="Enter capacity"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="room">Room</Label>
+                        <Input
+                          id="room"
+                          value={newClass.room}
+                          onChange={(e) => setNewClass({...newClass, room: e.target.value})}
+                          placeholder="Enter room number"
+                        />
+                      </div>
                     </div>
+                    <Button onClick={handleAddClass} className="w-full">
+                      Add Class
+                    </Button>
                   </div>
-                  <div>
-                    <Label htmlFor="teacher">Class Teacher</Label>
-                    <Select value={newClass.teacher} onValueChange={(value) => setNewClass({...newClass, teacher: value})}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select teacher" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {teachers.map((teacher) => (
-                          <SelectItem key={teacher.id} value={teacher.name}>
-                            {teacher.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="capacity">Capacity</Label>
-                      <Input
-                        id="capacity"
-                        type="number"
-                        value={newClass.capacity}
-                        onChange={(e) => setNewClass({...newClass, capacity: e.target.value})}
-                        placeholder="Enter capacity"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="room">Room</Label>
-                      <Input
-                        id="room"
-                        value={newClass.room}
-                        onChange={(e) => setNewClass({...newClass, room: e.target.value})}
-                        placeholder="Enter room number"
-                      />
-                    </div>
-                  </div>
-                  <Button onClick={handleAddClass} className="w-full">
-                    Add Class
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
+                </DialogContent>
+              </Dialog>
+            </div>
           </div>
 
           <div className="flex items-center space-x-4">
@@ -222,9 +234,9 @@ const SchoolAdminClasses = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Grades</SelectItem>
-                {grades.map((grade) => (
+                {availableGrades.map((grade) => (
                   <SelectItem key={grade} value={grade}>
-                    Grade {grade}
+                    {grade}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -289,6 +301,18 @@ const SchoolAdminClasses = () => {
               </Card>
             ))}
           </div>
+
+          <Dialog open={showSettingsDialog} onOpenChange={setShowSettingsDialog}>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>Grade System Settings</DialogTitle>
+                <DialogDescription>
+                  Configure your school's grading system
+                </DialogDescription>
+              </DialogHeader>
+              <GradeSystemSettings onGradesUpdate={handleGradesUpdate} />
+            </DialogContent>
+          </Dialog>
         </div>
       </DashboardLayout>
     </ProtectedRoute>
