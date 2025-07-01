@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -9,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { User, Edit, Transfer, FileText, DollarSign, History, Calendar, BookOpen, Users } from 'lucide-react';
+import { User, Edit, ArrowRightLeft, FileText, DollarSign, History, Calendar, BookOpen, Users } from 'lucide-react';
 
 interface StudentDetailsDialogProps {
   student: any;
@@ -105,7 +104,7 @@ const StudentDetailsDialog = ({ student, isOpen, onClose }: StudentDetailsDialog
                     Edit
                   </Button>
                   <Button variant="outline" onClick={handleTransfer}>
-                    <Transfer className="h-4 w-4 mr-2" />
+                    <ArrowRightLeft className="h-4 w-4 mr-2" />
                     Transfer
                   </Button>
                   <Button variant="outline" onClick={handleClassChange}>
