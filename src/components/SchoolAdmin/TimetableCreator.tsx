@@ -27,6 +27,58 @@ const TimetableCreator = () => {
   const teachers = ['Dr. Sarah Johnson', 'Mr. Michael Brown', 'Ms. Emily Davis', 'Mr. John Wilson'];
   const rooms = ['Room 101', 'Room 102', 'Lab 1', 'Lab 2', 'Library', 'Auditorium'];
 
+  // Mock class-teacher-subject assignments
+  const classTeacherAssignments = {
+    'Grade 8A': {
+      'Mathematics': 'Dr. Sarah Johnson',
+      'Physics': 'Mr. Michael Brown',
+      'Chemistry': 'Ms. Emily Davis',
+      'Biology': 'Mr. John Wilson',
+      'English': 'Dr. Sarah Johnson',
+      'History': 'Ms. Emily Davis'
+    },
+    'Grade 8B': {
+      'Mathematics': 'Dr. Sarah Johnson',
+      'Physics': 'Mr. Michael Brown',
+      'Chemistry': 'Ms. Emily Davis',
+      'Biology': 'Mr. John Wilson',
+      'English': 'Mr. Michael Brown',
+      'History': 'Ms. Emily Davis'
+    },
+    'Grade 9A': {
+      'Mathematics': 'Dr. Sarah Johnson',
+      'Physics': 'Mr. Michael Brown',
+      'Chemistry': 'Ms. Emily Davis',
+      'Biology': 'Mr. John Wilson',
+      'English': 'Dr. Sarah Johnson',
+      'History': 'Ms. Emily Davis'
+    },
+    'Grade 9B': {
+      'Mathematics': 'Mr. Michael Brown',
+      'Physics': 'Dr. Sarah Johnson',
+      'Chemistry': 'Ms. Emily Davis',
+      'Biology': 'Mr. John Wilson',
+      'English': 'Ms. Emily Davis',
+      'History': 'Mr. John Wilson'
+    },
+    'Grade 10A': {
+      'Mathematics': 'Dr. Sarah Johnson',
+      'Physics': 'Mr. Michael Brown',
+      'Chemistry': 'Ms. Emily Davis',
+      'Biology': 'Mr. John Wilson',
+      'English': 'Dr. Sarah Johnson',
+      'History': 'Ms. Emily Davis'
+    },
+    'Grade 10B': {
+      'Mathematics': 'Mr. Michael Brown',
+      'Physics': 'Dr. Sarah Johnson',
+      'Chemistry': 'Ms. Emily Davis',
+      'Biology': 'Mr. John Wilson',
+      'English': 'Mr. Michael Brown',
+      'History': 'Mr. John Wilson'
+    }
+  };
+
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
   const generateTimeSlots = () => {
@@ -75,6 +127,13 @@ const TimetableCreator = () => {
   };
 
   const timeSlots = generateTimeSlots();
+
+  const getTeacherForSubject = (subject: string) => {
+    if (selectedClass && classTeacherAssignments[selectedClass]) {
+      return classTeacherAssignments[selectedClass][subject] || '';
+    }
+    return '';
+  };
 
   const saveTimetable = () => {
     console.log('Saving timetable for', selectedClass);
@@ -210,7 +269,16 @@ const TimetableCreator = () => {
                         <td key={day} className="p-3">
                           {slot.type === 'period' ? (
                             <div className="space-y-2">
-                              <Select>
+                              <Select onValueChange={(subject) => {
+                                // Auto-populate teacher when subject is selected
+                                const teacherSelect = document.querySelector(`[data-teacher-for="${day}-${slot.period}"]`) as HTMLSelectElement;
+                                if (teacherSelect) {
+                                  const teacher = getTeacherForSubject(subject);
+                                  if (teacher) {
+                                    teacherSelect.value = teacher;
+                                  }
+                                }
+                              }}>
                                 <SelectTrigger className="h-8 text-xs">
                                   <SelectValue placeholder="Subject" />
                                 </SelectTrigger>
@@ -220,7 +288,7 @@ const TimetableCreator = () => {
                                   ))}
                                 </SelectContent>
                               </Select>
-                              <Select>
+                              <Select data-teacher-for={`${day}-${slot.period}`}>
                                 <SelectTrigger className="h-8 text-xs">
                                   <SelectValue placeholder="Teacher" />
                                 </SelectTrigger>
