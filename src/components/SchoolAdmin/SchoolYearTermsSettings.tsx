@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar, Plus, Edit, Trash2 } from 'lucide-react';
+import AddTermDialog from '@/components/SchoolAdmin/AddTermDialog';
 
 const SchoolYearTermsSettings = () => {
   const [academicYears, setAcademicYears] = useState([
@@ -37,11 +37,13 @@ const SchoolYearTermsSettings = () => {
   ]);
 
   const [showAddDialog, setShowAddDialog] = useState(false);
+  const [showAddTermDialog, setShowAddTermDialog] = useState(false);
+  const [selectedYearForTerm, setSelectedYearForTerm] = useState(null);
   const [newYear, setNewYear] = useState({
     year: '',
     startDate: '',
     endDate: '',
-    yearFormat: 'single', // 'single' for YYYY or 'range' for YYYY-YYYY
+    yearFormat: 'single',
     terms: []
   });
 
@@ -81,6 +83,25 @@ const SchoolYearTermsSettings = () => {
     } else {
       return `${startYear}-${endYear}`;
     }
+  };
+
+  const handleAddTerm = (yearId: number) => {
+    setSelectedYearForTerm(yearId);
+    setShowAddTermDialog(true);
+  };
+
+  const handleTermAdded = (term: any) => {
+    setAcademicYears(academicYears.map(year => {
+      if (year.id === selectedYearForTerm) {
+        return {
+          ...year,
+          terms: [...year.terms, term]
+        };
+      }
+      return year;
+    }));
+    setShowAddTermDialog(false);
+    setSelectedYearForTerm(null);
   };
 
   return (
@@ -227,7 +248,12 @@ const SchoolYearTermsSettings = () => {
                     No terms defined yet
                   </div>
                 )}
-                <Button variant="outline" size="sm" className="mt-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="mt-2"
+                  onClick={() => handleAddTerm(year.id)}
+                >
                   <Plus className="h-3 w-3 mr-1" />
                   Add Term
                 </Button>
@@ -236,6 +262,13 @@ const SchoolYearTermsSettings = () => {
           ))}
         </div>
       </CardContent>
+
+      <AddTermDialog
+        isOpen={showAddTermDialog}
+        onClose={() => setShowAddTermDialog(false)}
+        academicYearId={selectedYearForTerm}
+        onTermAdded={handleTermAdded}
+      />
     </Card>
   );
 };

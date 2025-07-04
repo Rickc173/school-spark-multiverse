@@ -11,6 +11,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Plus, Search, Users, User, Calendar, Settings } from 'lucide-react';
 import GradeSystemSettings from '@/components/SchoolAdmin/GradeSystemSettings';
+import ClassStudentsDialog from '@/components/SchoolAdmin/ClassStudentsDialog';
+import ClassScheduleDialog from '@/components/SchoolAdmin/ClassScheduleDialog';
 
 const SchoolAdminClasses = () => {
   const { user } = useAuth();
@@ -18,6 +20,9 @@ const SchoolAdminClasses = () => {
   const [gradeFilter, setGradeFilter] = useState('all');
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showSettingsDialog, setShowSettingsDialog] = useState(false);
+  const [selectedClass, setSelectedClass] = useState(null);
+  const [showStudentsDialog, setShowStudentsDialog] = useState(false);
+  const [showScheduleDialog, setShowScheduleDialog] = useState(false);
   const [availableGrades, setAvailableGrades] = useState([
     'Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12'
   ]);
@@ -116,6 +121,16 @@ const SchoolAdminClasses = () => {
     if (percentage >= 90) return 'text-red-600';
     if (percentage >= 80) return 'text-yellow-600';
     return 'text-green-600';
+  };
+
+  const handleViewStudents = (classData: any) => {
+    setSelectedClass(classData);
+    setShowStudentsDialog(true);
+  };
+
+  const handleViewSchedule = (classData: any) => {
+    setSelectedClass(classData);
+    setShowScheduleDialog(true);
   };
 
   return (
@@ -289,10 +304,20 @@ const SchoolAdminClasses = () => {
                     </div>
 
                     <div className="flex space-x-2 pt-2">
-                      <Button variant="outline" size="sm" className="flex-1">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="flex-1"
+                        onClick={() => handleViewStudents(cls)}
+                      >
                         View Students
                       </Button>
-                      <Button variant="outline" size="sm" className="flex-1">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="flex-1"
+                        onClick={() => handleViewSchedule(cls)}
+                      >
                         Schedule
                       </Button>
                     </div>
@@ -313,6 +338,18 @@ const SchoolAdminClasses = () => {
               <GradeSystemSettings onGradesUpdate={handleGradesUpdate} />
             </DialogContent>
           </Dialog>
+
+          <ClassStudentsDialog
+            classData={selectedClass}
+            isOpen={showStudentsDialog}
+            onClose={() => setShowStudentsDialog(false)}
+          />
+
+          <ClassScheduleDialog
+            classData={selectedClass}
+            isOpen={showScheduleDialog}
+            onClose={() => setShowScheduleDialog(false)}
+          />
         </div>
       </DashboardLayout>
     </ProtectedRoute>

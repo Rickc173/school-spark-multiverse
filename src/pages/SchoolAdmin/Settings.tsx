@@ -12,9 +12,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { School, Users, Calendar, Bell, Settings, Save } from 'lucide-react';
+import { School, Users, Calendar, Bell, Settings, Save, UserCheck, DollarSign } from 'lucide-react';
 import SchoolYearTermsSettings from '@/components/SchoolAdmin/SchoolYearTermsSettings';
 import GradeSystemSettings from '@/components/SchoolAdmin/GradeSystemSettings';
+import ClassOwnershipSettings from '@/components/SchoolAdmin/ClassOwnershipSettings';
+import TuitionFeeSettings from '@/components/SchoolAdmin/TuitionFeeSettings';
 
 const SchoolAdminSettings = () => {
   const { user } = useAuth();
@@ -56,10 +58,12 @@ const SchoolAdminSettings = () => {
           </div>
 
           <Tabs defaultValue="general" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-6">
               <TabsTrigger value="general">General</TabsTrigger>
               <TabsTrigger value="academic">Academic Year</TabsTrigger>
               <TabsTrigger value="grading">Grading System</TabsTrigger>
+              <TabsTrigger value="ownership">Class Ownership</TabsTrigger>
+              <TabsTrigger value="fees">Tuition Fees</TabsTrigger>
               <TabsTrigger value="notifications">Notifications</TabsTrigger>
             </TabsList>
 
@@ -140,6 +144,14 @@ const SchoolAdminSettings = () => {
 
             <TabsContent value="grading" className="space-y-4">
               <GradeSystemSettings />
+            </TabsContent>
+
+            <TabsContent value="ownership" className="space-y-4">
+              <ClassOwnershipSettings />
+            </TabsContent>
+
+            <TabsContent value="fees" className="space-y-4">
+              <TuitionFeeSettings />
             </TabsContent>
 
             <TabsContent value="notifications" className="space-y-4">
