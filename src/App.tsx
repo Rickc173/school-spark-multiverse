@@ -14,6 +14,11 @@ import SystemAdminSchools from "./pages/SystemAdmin/Schools";
 import SystemAdminUsers from "./pages/SystemAdmin/Users";
 import SystemAdminSettings from "./pages/SystemAdmin/Settings";
 
+// Principal Pages
+import PrincipalDashboard from "./pages/Principal/Dashboard";
+import PrincipalTeachers from "./pages/Principal/Teachers";
+import PrincipalApprovals from "./pages/Principal/Approvals";
+
 // School Admin Pages
 import SchoolAdminStudents from "./pages/SchoolAdmin/Students";
 import SchoolAdminTeachers from "./pages/SchoolAdmin/Teachers";
@@ -57,6 +62,11 @@ const App = () => (
             <Route path="/system-admin/schools" element={<SystemAdminSchools />} />
             <Route path="/system-admin/users" element={<SystemAdminUsers />} />
             <Route path="/system-admin/settings" element={<SystemAdminSettings />} />
+            
+            {/* Principal Routes */}
+            <Route path="/principal" element={<PrincipalDashboard />} />
+            <Route path="/principal/teachers" element={<PrincipalTeachers />} />
+            <Route path="/principal/approvals" element={<PrincipalApprovals />} />
             
             {/* School Admin Routes */}
             <Route path="/school-admin" element={<SchoolAdminStudents />} />

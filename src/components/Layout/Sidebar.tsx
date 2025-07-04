@@ -11,6 +11,9 @@ import {
   FileText,
   User,
   LogOut,
+  Shield,
+  BookOpen,
+  UserCheck,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -32,6 +35,16 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
           { to: '/system-admin/schools', icon: Home, label: 'Schools' },
           { to: '/system-admin/users', icon: Users, label: 'Users' },
           { to: '/system-admin/settings', icon: Settings, label: 'Settings' },
+        ];
+      case 'principal':
+        return [
+          { to: '/principal', icon: Home, label: 'Dashboard' },
+          { to: '/principal/teachers', icon: UserCheck, label: 'Teachers' },
+          { to: '/principal/classes', icon: BookOpen, label: 'Classes' },
+          { to: '/principal/students', icon: Users, label: 'Students' },
+          { to: '/principal/approvals', icon: Shield, label: 'Approvals' },
+          { to: '/principal/settings', icon: Settings, label: 'Settings' },
+          { to: '/principal/announcements', icon: Bell, label: 'Announcements' },
         ];
       case 'school_admin':
         return [
