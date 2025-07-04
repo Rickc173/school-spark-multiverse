@@ -28,6 +28,18 @@ import TeacherAssignments from "./pages/Teacher/Assignments";
 import TeacherAttendance from "./pages/Teacher/Attendance";
 import TeacherStudents from "./pages/Teacher/Students";
 
+// Student Pages
+import StudentAssignments from "./pages/Student/Assignments";
+import StudentGrades from "./pages/Student/Grades";
+import StudentAttendance from "./pages/Student/Attendance";
+import StudentAnnouncements from "./pages/Student/Announcements";
+
+// Parent Pages
+import ParentChildren from "./pages/Parent/Children";
+import ParentFees from "./pages/Parent/Fees";
+import ParentAttendance from "./pages/Parent/Attendance";
+import ParentAnnouncements from "./pages/Parent/Announcements";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -60,6 +72,18 @@ const App = () => (
             <Route path="/teacher/assignments" element={<TeacherAssignments />} />
             <Route path="/teacher/attendance" element={<TeacherAttendance />} />
             <Route path="/teacher/students" element={<TeacherStudents />} />
+            
+            {/* Student Routes */}
+            <Route path="/student/assignments" element={<StudentAssignments />} />
+            <Route path="/student/grades" element={<StudentGrades />} />
+            <Route path="/student/attendance" element={<StudentAttendance />} />
+            <Route path="/student/announcements" element={<StudentAnnouncements />} />
+            
+            {/* Parent Routes */}
+            <Route path="/parent/children" element={<ParentChildren />} />
+            <Route path="/parent/fees" element={<ParentFees />} />
+            <Route path="/parent/attendance" element={<ParentAttendance />} />
+            <Route path="/parent/announcements" element={<ParentAnnouncements />} />
             
             <Route path="*" element={<NotFound />} />
           </Routes>
