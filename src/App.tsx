@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import Login from "./components/Login";
 
 // System Admin Pages
 import SystemAdminDashboard from "./pages/SystemAdmin/Dashboard";
@@ -60,6 +61,7 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/login" element={<Login />} />
             
             {/* System Admin Routes */}
             <Route path="/system-admin" element={<SystemAdminDashboard />} />
